@@ -242,14 +242,14 @@ function formChecker(form) {
   return valid;
 }
 
-// function dateChecker() {
-//   const today = new Date();
-//   if (date < today) {
-//     UI.alertBox.innerHTML = "La date renseignée est expirée.";
-//     displayErrorAlert();
-//     return;
-//   }
-// }
+function dateChecker() {
+  const today = new Date();
+  if (date < today) {
+    UI.alertBox.innerHTML = "La date renseignée est expirée.";
+    displayErrorAlert();
+    return;
+  }
+}
 
 function resetForm(form) {
   Object.keys(form).forEach((key) => {
