@@ -1,23 +1,31 @@
+$font: "Roobert";
+
 @font-face {
-  font-family: "Roobert";
+  font-family: $font;
   src: url("fonts/Roobert-Regular.woff2");
   font-weight: 100;
 }
 @font-face {
-  font-family: "Roobert";
+  font-family: $font;
   src: url("fonts/Roobert-Medium.woff2");
   font-weight: 200;
 }
 @font-face {
-  font-family: "Roobert";
+  font-family: $font;
   src: url("fonts/Roobert-SemiBold.woff2");
   font-weight: 300;
 }
 @font-face {
-  font-family: "Roobert";
+  font-family: $font;
   src: url("fonts/Roobert-Bold.woff2");
   font-weight: 400;
 }
+
+$white: #f1f1f1;
+$black: #161616;
+$green: #50b76d;
+$red: #e56c6c;
+$blue: #6d9fff;
 
 *,
 ::before,
@@ -28,355 +36,337 @@
 }
 
 body {
-  font-family: "Roobert";
+  font-family: $font;
   font-weight: 100;
-  background-color: #f1f1f1;
-}
+  background-color: $white;
 
-#app {
-  display: flex;
-  flex-direction: row;
-}
+  #app {
+    display: flex;
+    flex-direction: row;
 
-#alertBox {
-  position: relative;
-  top: -64px;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 64px;
-  color: #f1f1f1;
-  transition: 0.3s;
-}
+    #alertBox {
+      position: relative;
+      top: -64px;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 64px;
+      color: $white;
+      transition: 0.3s;
+    }
 
-.successAlert {
-  background-color: #50b76d;
-}
+    .successAlert {
+      background-color: $green;
+    }
 
-.errorAlert {
-  background-color: #e56c6c;
-}
+    .errorAlert {
+      background-color: $red;
+    }
 
-#disconnectButton {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  z-index: 1;
-  width: 128px;
-  height: 40px;
-  font-family: "Roobert";
-  font-weight: 400;
-  background-color: #f1f1f1;
-  border: 1px solid #161616;
-  border-radius: 4px;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
+    #disconnectButton {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 1;
+      width: 128px;
+      height: 40px;
+      font-family: $font;
+      font-weight: 400;
+      background-color: $white;
+      border: 1px solid $black;
+      border-radius: 4px;
+      cursor: pointer;
+      transition-property: color, background-color;
+      transition-duration: 0.3s;
+    }
 
-#disconnectButton:hover {
-  color: #f1f1f1;
-  background-color: #161616;
-}
+    #disconnectButton:hover {
+      color: $white;
+      background-color: $black;
+    }
 
-#modalBackground {
-  display: none;
-  position: absolute;
-  z-index: 2;
-  width: 100vw;
-  height: 100vh;
-  background-color: #161616;
-  opacity: 0.9;
-}
+    #modalBackground {
+      display: none;
+      position: absolute;
+      z-index: 2;
+      width: 100vw;
+      height: 100vh;
+      background-color: $black;
+      opacity: 0.9;
+    }
 
-#modalContainer {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  z-index: 3;
-  width: 100vw;
-  height: 100vh;
-}
+    /* MODAL */
 
-#modalAlert {
-  padding: 64px;
-  background-color: #f1f1f1;
-  border-radius: 4px;
-}
+    #modalContainer {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      z-index: 3;
+      width: 100vw;
+      height: 100vh;
 
-#modalTitle {
-  width: 256px;
-  font-weight: 400;
-  text-align: center;
-}
+      #modalAlert {
+        padding: 64px;
+        background-color: $white;
+        border-radius: 4px;
 
-#updateForm {
-  margin-top: 64px;
-}
+        #modalTitle {
+          width: 256px;
+          font-weight: 400;
+          text-align: center;
+        }
 
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
+        #updateForm {
+          margin-top: 64px;
+        }
 
-.updateInput,
-.dateUpdateInput {
-  width: 256px;
-  height: 40px;
-  padding-left: 16px;
-  color: #161616;
-  background-color: #f1f1f1;
-  border: 1px solid #161616;
-  border-radius: 4px;
-}
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          display: none;
+          -webkit-appearance: none;
+        }
 
-.updateInput:focus,
-.dateUpdateInput:focus {
-  background-color: #f1f1f1;
-  outline: none;
-  border: 2px solid #161616;
-}
+        .updateInput,
+        .dateUpdateInput {
+          width: 256px;
+          height: 40px;
+          padding-left: 16px;
+          color: $black;
+          background-color: $white;
+          border: 1px solid $black;
+          border-radius: 4px;
+        }
 
-.dateUpdateInput {
-  font-family: "Roobert";
-  font-weight: 100;
-  text-transform: uppercase;
-}
+        .dateUpdateInput {
+          font-family: $font;
+          font-weight: 100;
+          text-transform: uppercase;
+        }
 
-#yesButton,
-#noButton {
-  margin-top: 64px;
-  width: 120px;
-  height: 40px;
-  font-family: "Roobert";
-  font-weight: 400;
-  background-color: #f1f1f1;
-  border: 1px solid #161616;
-  border-radius: 4px;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
+        .updateInput:focus,
+        .dateUpdateInput:focus {
+          background-color: $white;
+          outline: none;
+          border: 2px solid $black;
+        }
 
-#yesButton {
-  margin-right: 16px;
-  color: #f1f1f1;
-  background-color: #161616;
-}
+        #yesButton,
+        #noButton {
+          margin-top: 64px;
+          width: 120px;
+          height: 40px;
+          font-family: $font;
+          font-weight: 400;
+          background-color: $white;
+          border: 1px solid $black;
+          border-radius: 4px;
+          cursor: pointer;
+          transition-property: color, background-color;
+          transition-duration: 0.3s;
+        }
 
-#yesButton:hover {
-  color: #161616;
-  background-color: #f1f1f1;
-}
+        #noButton:hover {
+          color: $white;
+          background-color: $black;
+        }
 
-#noButton:hover {
-  color: #f1f1f1;
-  background-color: #161616;
-}
+        #yesButton {
+          margin-right: 16px;
+          color: $white;
+          background-color: $black;
+        }
 
-/* FORM CONTAINER */
+        #yesButton:hover {
+          color: $black;
+          background-color: $white;
+        }
+      }
+    }
 
-#formContainer {
-  position: fixed;
-  height: 100vh;
-  padding: 128px 96px 0 96px;
-  color: #f1f1f1;
-  background-color: #161616;
-}
+    /* FORM CONTAINER */
 
-#formContainer h1 {
-  margin-bottom: 128px;
-  font-size: 24px;
-  font-weight: 400;
-  text-align: center;
-}
+    #formContainer {
+      position: fixed;
+      height: 100vh;
+      padding: 128px 96px 0 96px;
+      color: $white;
+      background-color: $black;
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+      h1 {
+        margin-bottom: 128px;
+        font-size: 24px;
+        font-weight: 400;
+        text-align: center;
+      }
+    }
 
-form input {
-  width: 256px;
-  height: 40px;
-  padding-left: 16px;
-  color: #f1f1f1;
-  background-color: #161616;
-  border: 1px solid #f1f1f1;
-  border-radius: 4px;
-}
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-form input:not(:nth-child(5)) {
-  margin-bottom: 32px;
-}
+      input {
+        width: 256px;
+        height: 40px;
+        padding-left: 16px;
+        color: $white;
+        background-color: $black;
+        border: 1px solid $white;
+        border-radius: 4px;
+      }
 
-form input:focus {
-  background-color: #161616;
-  outline: none;
-  border: 2px solid #f1f1f1;
-}
+      input:not(:nth-child(5)) {
+        margin-bottom: 32px;
+      }
 
-::placeholder {
-  font-family: "Roobert";
-  font-weight: 100;
-  color: #f1f1f1;
-}
+      input:focus {
+        background-color: $black;
+        outline: none;
+        border: 2px solid $white;
+      }
 
-#dateInput {
-  font-family: "Roobert";
-  font-weight: 100;
-  text-transform: uppercase;
-}
+      #dateInput {
+        font-family: $font;
+        font-weight: 100;
+        text-transform: uppercase;
+      }
 
-#formButton {
-  width: 128px;
-  height: 40px;
-  margin-top: 64px;
-  font-family: "Roobert";
-  font-weight: 400;
-  color: #f1f1f1;
-  background-color: #50b76d;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color, 0.3s;
-}
+      #formButton {
+        width: 128px;
+        height: 40px;
+        margin-top: 64px;
+        font-family: $font;
+        font-weight: 400;
+        color: $white;
+        background-color: $green;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color, 0.3s;
+      }
 
-#formButton:hover {
-  background-color: #50b76d9d;
-}
+      #formButton:hover {
+        background-color: #50b76d9d;
+      }
 
-/* LIST CONTAINER */
+      ::placeholder {
+        font-family: $font;
+        font-weight: 100;
+        color: $white;
+      }
+    }
 
-#listContainer {
-  position: absolute;
-  right: 0;
-  width: calc(100% - 448px);
-  padding-top: 128px;
-  color: #161616;
-}
+    /* LIST CONTAINER */
 
-#listContainer h2 {
-  margin-bottom: 96px;
-  font-size: 24px;
-  font-weight: 400;
-  text-align: center;
-}
+    #listContainer {
+      position: absolute;
+      right: 0;
+      width: calc(100% - 448px);
+      padding-top: 128px;
+      color: $black;
 
-#listContainer > button {
-  position: absolute;
-  top: 32px;
-  right: 32px;
-  width: 128px;
-  height: 40px;
-  font-family: "Roobert";
-  font-weight: 400;
-  background-color: #f1f1f1;
-  border: 1px solid #161616;
-  border-radius: 4px;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
+      h2 {
+        margin-bottom: 96px;
+        font-size: 24px;
+        font-weight: 400;
+        text-align: center;
+      }
 
-#listContainer > button:hover {
-  color: #f1f1f1;
-  background-color: #161616;
-}
+      #concertList {
+        > :not(:last-child) {
+          border-bottom: 1px solid #d9d9d9;
+        }
+        .concert {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 32px 96px;
+          text-overflow: ellipsis;
 
-#concertList > :not(:last-child) {
-  border-bottom: 1px solid #d9d9d9;
-}
+          .availableTickets {
+            color: $green;
+            text-decoration: none;
 
-.concert {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 32px 96px;
-  text-overflow: ellipsis;
-}
+            a {
+              margin-left: 8px;
 
-.availableTickets {
-  color: #50b76d;
-  text-decoration: none;
-}
+              .ticketsLinkButton {
+                width: 32px;
+                height: 16px;
+                font-family: $font;
+                font-size: 10px;
+                font-weight: 400;
+                color: $green;
+                background-color: $white;
+                border: 1px solid $green;
+                border-radius: 4px;
+                cursor: pointer;
+                transition-property: color, background-color;
+                transition-duration: 0.3s;
+              }
 
-.availableTickets a {
-  margin-left: 8px;
-}
+              .ticketsLinkButton:hover {
+                color: $white;
+                background-color: $green;
+              }
+            }
+          }
 
-.ticketsLinkButton {
-  width: 32px;
-  height: 16px;
-  font-family: "Roobert";
-  font-size: 10px;
-  font-weight: 400;
-  color: #50b76d;
-  background-color: #f1f1f1;
-  border: 1px solid #50b76d;
-  border-radius: 4px;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
+          .unavailableTickets {
+            color: $red;
+            text-decoration: none;
+          }
 
-.ticketsLinkButton:hover {
-  color: #f1f1f1;
-  background-color: #50b76d;
-}
+          .editButtons {
+            display: flex;
+            flex-direction: column;
 
-.unavailableTickets {
-  color: #e56c6c;
-  text-decoration: none;
-}
+            .updateButton {
+              width: 64px;
+              height: 16px;
+              margin-bottom: 8px;
+              font-family: $font;
+              font-size: 10px;
+              font-weight: 400;
+              color: $blue;
+              background-color: $white;
+              border: 1px solid $blue;
+              border-radius: 4px;
+              cursor: pointer;
+              transition-property: color, background-color;
+              transition-duration: 0.3s;
+            }
 
-.editButtons {
-  display: flex;
-  flex-direction: column;
-}
+            .updateButton:hover {
+              color: $white;
+              background-color: $blue;
+            }
 
-.updateButton {
-  width: 64px;
-  height: 16px;
-  margin-bottom: 8px;
-  font-family: "Roobert";
-  font-size: 10px;
-  font-weight: 400;
-  color: #6d9fff;
-  background-color: #f1f1f1;
-  border: 1px solid #6d9fff;
-  border-radius: 4px;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
+            .deleteButton {
+              width: 64px;
+              height: 16px;
+              font-family: $font;
+              font-size: 10px;
+              font-weight: 400;
+              color: $red;
+              background-color: $white;
+              border: 1px solid $red;
+              border-radius: 4px;
+              cursor: pointer;
+              transition-property: color, background-color;
+              transition-duration: 0.3s;
+            }
 
-.updateButton:hover {
-  color: #f1f1f1;
-  background-color: #6d9fff;
-}
-
-.deleteButton {
-  width: 64px;
-  height: 16px;
-  font-family: "Roobert";
-  font-size: 10px;
-  font-weight: 400;
-  color: #e56c6c;
-  background-color: #f1f1f1;
-  border: 1px solid #e56c6c;
-  border-radius: 4px;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
-
-.deleteButton:hover {
-  color: #f1f1f1;
-  background-color: #e56c6c;
+            .deleteButton:hover {
+              color: $white;
+              background-color: $red;
+            }
+          }
+        }
+      }
+    }
+  }
 }
