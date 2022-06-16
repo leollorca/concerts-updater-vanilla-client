@@ -1,0 +1,15 @@
+{
+  "name": "api",
+  "scripts": {
+    "start": "nodemon -r dotenv/config index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^7.0.0",
+    "fastify": "^3.29.0",
+    "mongoist": "^2.5.4"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.16"
+  }
+}
