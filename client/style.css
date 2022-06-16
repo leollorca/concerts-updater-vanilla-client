@@ -30,6 +30,7 @@
 body {
   font-family: "Roobert";
   font-weight: 100;
+  background-color: #f1f1f1;
 }
 
 #app {
@@ -37,19 +38,158 @@ body {
   flex-direction: row;
 }
 
+#alertBox {
+  position: relative;
+  top: -64px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 64px;
+  color: #f1f1f1;
+  transition: 0.3s;
+}
+
+.successAlert {
+  background-color: #50b76d;
+}
+
+.errorAlert {
+  background-color: #e56c6c;
+}
+
+#disconnectButton {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 1;
+  width: 128px;
+  height: 40px;
+  font-family: "Roobert";
+  font-weight: 400;
+  background-color: #f1f1f1;
+  border: 1px solid #161616;
+  border-radius: 4px;
+  cursor: pointer;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+}
+
+#disconnectButton:hover {
+  color: #f1f1f1;
+  background-color: #161616;
+}
+
+#modalBackground {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  background-color: #161616;
+  opacity: 0.9;
+}
+
+#modalContainer {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 3;
+  width: 100vw;
+  height: 100vh;
+}
+
+#modalAlert {
+  padding: 64px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+#modalTitle {
+  width: 256px;
+  font-weight: 400;
+  text-align: center;
+}
+
+#updateForm {
+  margin-top: 64px;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.updateInput,
+.dateUpdateInput {
+  width: 256px;
+  height: 40px;
+  padding-left: 16px;
+  color: #161616;
+  background-color: #f1f1f1;
+  border: 1px solid #161616;
+  border-radius: 4px;
+}
+
+.updateInput:focus,
+.dateUpdateInput:focus {
+  background-color: #f1f1f1;
+  outline: none;
+  border: 2px solid #161616;
+}
+
+.dateUpdateInput {
+  font-family: "Roobert";
+  font-weight: 100;
+  text-transform: uppercase;
+}
+
+#yesButton,
+#noButton {
+  margin-top: 64px;
+  width: 120px;
+  height: 40px;
+  font-family: "Roobert";
+  font-weight: 400;
+  background-color: #f1f1f1;
+  border: 1px solid #161616;
+  border-radius: 4px;
+  cursor: pointer;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+}
+
+#yesButton {
+  margin-right: 16px;
+  color: #f1f1f1;
+  background-color: #161616;
+}
+
+#yesButton:hover {
+  color: #161616;
+  background-color: #f1f1f1;
+}
+
+#noButton:hover {
+  color: #f1f1f1;
+  background-color: #161616;
+}
+
 /* FORM CONTAINER */
 
 #formContainer {
   position: fixed;
-  width: 25%;
   height: 100vh;
-  padding-top: 128px;
+  padding: 128px 96px 0 96px;
   color: #f1f1f1;
   background-color: #161616;
 }
 
 #formContainer h1 {
-  margin-bottom: 64px;
+  margin-bottom: 128px;
   font-size: 24px;
   font-weight: 400;
   text-align: center;
@@ -76,13 +216,21 @@ form input:not(:nth-child(5)) {
 }
 
 form input:focus {
+  background-color: #161616;
   outline: none;
+  border: 2px solid #f1f1f1;
 }
 
 ::placeholder {
   font-family: "Roobert";
   font-weight: 100;
   color: #f1f1f1;
+}
+
+#dateInput {
+  font-family: "Roobert";
+  font-weight: 100;
+  text-transform: uppercase;
 }
 
 #formButton {
@@ -108,14 +256,13 @@ form input:focus {
 #listContainer {
   position: absolute;
   right: 0;
-  width: 75%;
+  width: calc(100% - 448px);
   padding-top: 128px;
   color: #161616;
-  background-color: #f1f1f1;
 }
 
 #listContainer h2 {
-  margin-bottom: 48px;
+  margin-bottom: 96px;
   font-size: 24px;
   font-weight: 400;
   text-align: center;
@@ -142,20 +289,49 @@ form input:focus {
   background-color: #161616;
 }
 
-ul > :not(:last-child) {
+#concertList > :not(:last-child) {
   border-bottom: 1px solid #d9d9d9;
 }
 
 .concert {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  padding: 16px 0;
+  padding: 32px 96px;
+  text-overflow: ellipsis;
 }
 
-.concert a {
+.availableTickets {
   color: #50b76d;
+  text-decoration: none;
+}
+
+.availableTickets a {
+  margin-left: 8px;
+}
+
+.ticketsLinkButton {
+  width: 32px;
+  height: 16px;
+  font-family: "Roobert";
+  font-size: 10px;
+  font-weight: 400;
+  color: #50b76d;
+  background-color: #f1f1f1;
+  border: 1px solid #50b76d;
+  border-radius: 4px;
+  cursor: pointer;
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+}
+
+.ticketsLinkButton:hover {
+  color: #f1f1f1;
+  background-color: #50b76d;
+}
+
+.unavailableTickets {
+  color: #e56c6c;
   text-decoration: none;
 }
 
@@ -164,7 +340,7 @@ ul > :not(:last-child) {
   flex-direction: column;
 }
 
-.modifyButton {
+.updateButton {
   width: 64px;
   height: 16px;
   margin-bottom: 8px;
@@ -180,7 +356,7 @@ ul > :not(:last-child) {
   transition-duration: 0.3s;
 }
 
-.modifyButton:hover {
+.updateButton:hover {
   color: #f1f1f1;
   background-color: #6d9fff;
 }
