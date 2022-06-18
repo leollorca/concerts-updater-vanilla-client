@@ -45,7 +45,7 @@ body {
     flex-direction: row;
 
     #alertBox {
-      position: relative;
+      position: fixed;
       top: -64px;
       z-index: 2;
       display: flex;

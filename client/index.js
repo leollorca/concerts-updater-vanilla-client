@@ -71,6 +71,12 @@ UI.formButton.addEventListener("click", submitConcert);
 
 function submitConcert(e) {
   e.preventDefault();
+  if (!dateChecker(UI.form.dateInput.value)) {
+    UI.form.dateInput.style.border = "1px solid #e56c6c";
+    UI.alertBox.innerHTML = "La date renseignée est expirée.";
+    displayErrorAlert();
+    return;
+  }
   if (!formChecker(UI.form)) {
     UI.alertBox.innerHTML = "Formulaire incomplet.";
     displayErrorAlert();
@@ -82,12 +88,10 @@ function submitConcert(e) {
       UI.alertBox.innerHTML = "Date ajoutée avec succès.";
       displaySuccessAlert();
       resetForm(UI.form);
-      console.log("Succès");
     })
     .catch((error) => {
       UI.alertBox.innerHTML = "Une erreur s'est produite.";
       displayErrorAlert();
-      console.log("Erreur");
     });
 }
 
@@ -102,9 +106,7 @@ Object.keys(UI.form).forEach((key) => {
 });
 
 function constructConcert() {
-  const dateInputValue = new Date(UI.form.dateInput.value).toLocaleDateString(
-    "fr-FR"
-  );
+  const dateInputValue = new Date(UI.form.dateInput.value);
   const cityInputValue = UI.form.cityInput.value;
   const depNumInputValue = UI.form.depNumInput.value;
   const placeInputValue = UI.form.placeInput.value;
@@ -116,6 +118,7 @@ function constructConcert() {
     place: placeInputValue,
     ticketsLink: ticketsLinkInputValue,
   };
+  dateChecker(dateInputValue);
   return concert;
 }
 
@@ -124,7 +127,9 @@ function addConcert(concert) {
   concertTag.classList.add("concert");
   if (concert.ticketsLink === "") {
     concertTag.innerHTML = `
-      <span class="col1">${concert.date}</span>
+      <span class="col1">${new Date(concert.date).toLocaleDateString(
+        "fr-FR"
+      )}</span>
       <span class="col2">${concert.city}</span>
       <span class="col3">${concert.depNum}</span>
       <span class="col4">${concert.place}</span>
@@ -132,7 +137,9 @@ function addConcert(concert) {
     `;
   } else {
     concertTag.innerHTML = `
-      <span class="col1">${concert.date}</span>
+      <span class="col1">${new Date(concert.date).toLocaleDateString(
+        "fr-FR"
+      )}</span>
       <span class="col2">${concert.city}</span>
       <span class="col3">${concert.depNum}</span>
       <span class="col4">${concert.place}</span>
@@ -161,20 +168,25 @@ function addConcert(concert) {
         const updateInput = document.createElement("input");
         updateInput.setAttribute("class", `${key}UpdateInput`);
         if (key === "date") {
+          updateInput.value = new Date(concert[key]).toLocaleDateString(
+            "fr-FR"
+          );
           updateInput.addEventListener("focus", () => {
             updateInput.setAttribute("type", "date");
           });
           updateInput.addEventListener("focusout", () => {
             if (!updateInput.value) {
               updateInput.setAttribute("type", "text");
-              updateInput.value = concert[key];
+              updateInput.value = new Date(concert[key]).toLocaleDateString(
+                "fr-FR"
+              );
             }
           });
         } else {
           updateInput.setAttribute("type", "text");
           updateInput.setAttribute("class", "updateInput");
+          updateInput.value = concert[key];
         }
-        updateInput.value = concert[key];
         UI.updateForm.appendChild(updateInput);
         UI.yesButton.addEventListener("click", () => {
           if (key === "date") {
@@ -244,13 +256,14 @@ function formChecker(form) {
   return valid;
 }
 
-function dateChecker() {
-  const today = new Date();
-  if (date < today) {
-    UI.alertBox.innerHTML = "La date renseignée est expirée.";
-    displayErrorAlert();
-    return;
+function dateChecker(date) {
+  let valid = true;
+  const today = new Date().getTime();
+  const concertDate = new Date(date).getTime();
+  if (concertDate < today) {
+    valid = false;
   }
+  return valid;
 }
 
 function resetForm(form) {
