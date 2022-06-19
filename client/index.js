@@ -190,9 +190,7 @@ function addConcert(concert) {
         UI.updateForm.appendChild(updateInput);
         UI.yesButton.addEventListener("click", () => {
           if (key === "date") {
-            concert[key] = new Date(updateInput.value).toLocaleDateString(
-              "fr-FR"
-            );
+            concert[key] = new Date(updateInput.value);
           } else {
             concert[key] = updateInput.value;
           }
