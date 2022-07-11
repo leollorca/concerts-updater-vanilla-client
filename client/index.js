@@ -72,6 +72,7 @@ function renderApp() {
 }
 
 let state = [];
+let currentConcert = null;
 
 UI.formButton.addEventListener("click", submitConcert);
 
@@ -167,6 +168,7 @@ function addConcert(concert) {
   editButtons.appendChild(deleteButton);
   concertTag.appendChild(editButtons);
   updateButton.addEventListener("click", () => {
+    console.log(concert);
     buildUpdateModal(concert);
   });
   deleteButton.addEventListener("click", () => {
@@ -177,9 +179,9 @@ function addConcert(concert) {
 
 function buildUpdateModal(concert) {
   displayUpdateModal();
-  UI.updateForm.dateUpdateInput.value = new Date(
-    concert.date
-  ).toLocaleDateString("fr-FR");
+  UI.updateForm.dateUpdateInput.value = new Date(concert.date)
+    .toISOString()
+    .slice(0, 10);
   UI.updateForm.cityUpdateInput.value = concert.city;
   UI.updateForm.depNumUpdateInput.value = concert.depNum;
   UI.updateForm.placeUpdateInput.value = concert.place;
@@ -188,25 +190,19 @@ function buildUpdateModal(concert) {
   } else {
     concert.ticketsLink = UI.updateForm.ticketsLinkUpdateInput.value;
   }
-  UI.modal.confirmButton.addEventListener("click", () => {
+  function onUpdateConcert(e) {
+    e.preventDefault();
+    UI.modal.confirmButton.removeEventListener("click", onUpdateConcert, true);
     updateConcert(concert);
-  });
+  }
+  UI.modal.confirmButton.addEventListener("click", onUpdateConcert, true);
   UI.modal.cancelButton.addEventListener("click", hideModal);
-  UI.updateForm.dateUpdateInput.addEventListener("focus", () => {
-    UI.updateForm.dateUpdateInput.setAttribute("type", "date");
-  });
-  UI.updateForm.dateUpdateInput.addEventListener("focusout", () => {
-    if (!UI.updateForm.dateUpdateInput.value) {
-      UI.updateForm.dateUpdateInput.setAttribute("type", "text");
-      UI.updateForm.dateUpdateInput.value = new Date(
-        concert.date
-      ).toLocaleDateString("fr-FR");
-    }
-  });
 }
 
 function updateConcert(concert) {
   concert.date = new Date(UI.updateForm.dateUpdateInput.value);
+  console.log(UI.updateForm.dateUpdateInput.value);
+  console.log(concert.date);
   concert.city = UI.updateForm.cityUpdateInput.value;
   concert.depNum = UI.updateForm.depNumUpdateInput.value;
   concert.place = UI.updateForm.placeUpdateInput.value;
@@ -214,7 +210,6 @@ function updateConcert(concert) {
   mongoUpdateConcert(concert)
     .then(() => {
       fetchData();
-      console.log("bravo");
       UI.alertBox.innerHTML = "Date modifiée avec succès.";
       displaySuccessAlert();
       hideModal();
@@ -335,6 +330,7 @@ function mongoAddConcert(concert) {
 }
 
 function mongoUpdateConcert(concert) {
+  console.log("mongo", concert);
   return fetch(`http://localhost:8070/concerts/${concert._id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

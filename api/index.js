@@ -71,7 +71,7 @@ server.put("/concerts/:id", (request, reply) => {
       }
     )
     .then(() => {
-      reply.code(201).send();
+      reply.code(204).send();
     })
     .catch((error) => {
       console.log(error);
@@ -84,7 +84,7 @@ server.delete("/concerts/:id", (request, reply) => {
   db.concerts
     .remove({ _id: mongoist.ObjectId(concertId) })
     .then(() => {
-      reply.code(201).send();
+      reply.code(204).send();
     })
     .catch((error) => {
       console.log(error);
