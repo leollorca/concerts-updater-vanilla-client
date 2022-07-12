@@ -7,44 +7,88 @@
     <title>concerts-updater</title>
   </head>
   <body>
-    <div id="app">
-      <div id="alertBox"></div>
-      <button id="disconnectButton">Se déconnecter</button>
-      <div id="formContainer">
-        <h1>Ajouter une date</h1>
+    <div class="app">
+      <div class="alertBox"></div>
+      <button class="disconnectButton">Se déconnecter</button>
+      <div class="formContainer">
+        <h1 class="test">Ajouter une date</h1>
         <form>
-          <input type="date" autocomplete="off" required id="dateInput" />
+          <input type="date" autocomplete="off" required class="dateInput" />
           <input
             type="text"
             autocomplete="off"
             placeholder="Ville"
             required
-            id="cityInput"
+            class="cityInput"
           />
           <input
             type="text"
             autocomplete="off"
             placeholder="N° Département"
             required
-            id="depNumInput"
+            class="depNumInput"
           />
           <input
             type="text"
             autocomplete="off"
             placeholder="Lieu"
             required
-            id="placeInput"
+            class="placeInput"
           />
           <input
             type="text"
             autocomplete="off"
             placeholder="Lien billetterie"
-            id="ticketsLinkInput"
+            class="ticketsLinkInput"
           />
-          <button id="formButton">Ajouter la date</button>
+          <button class="formButton">Ajouter la date</button>
         </form>
       </div>
-      <div id="listContainer"></div>
+      <div class="listContainer"></div>
+      <div class="modalBackground"></div>
+      <div class="modalContainer">
+        <div class="updateModal">
+          <h3 class="modalTitle">Modifier la date.</h3>
+          <form>
+            <input
+              type="date"
+              autocomplete="off"
+              required
+              class="dateUpdateInput"
+            />
+            <input
+              type="text"
+              autocomplete="off"
+              required
+              class="cityUpdateInput"
+            />
+            <input
+              type="text"
+              autocomplete="off"
+              required
+              class="depNumUpdateInput"
+            />
+            <input
+              type="text"
+              autocomplete="off"
+              required
+              class="placeUpdateInput"
+            />
+            <input
+              type="text"
+              autocomplete="off"
+              class="ticketsLinkUpdateInput"
+            />
+          </form>
+          <!-- <button class="confirmButton">Modifier</button>
+          <button class="cancelButton">Annuler</button> -->
+        </div>
+        <div class="deleteModal">
+          <h3 class="modalTitle">Supprimer la date.</h3>
+          <button class="yesButton">Oui</button>
+          <button class="noButton">Non</button>
+        </div>
+      </div>
     </div>
     <script type="module" src="./index.js"></script>
   </body>

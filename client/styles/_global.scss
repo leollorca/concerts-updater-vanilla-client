@@ -1,0 +1,353 @@
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+body {
+  font-family: $font;
+  font-weight: 100;
+  background-color: $white;
+
+  .app {
+    display: flex;
+    flex-direction: row;
+
+    .alertBox {
+      position: fixed;
+      top: -64px;
+      z-index: 4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 64px;
+      color: $white;
+      transition: 0.3s;
+    }
+
+    .successAlert {
+      background-color: $green;
+    }
+
+    .errorAlert {
+      background-color: $red;
+    }
+
+    .disconnectButton {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 1;
+      width: 128px;
+      height: 40px;
+      font-family: $font;
+      font-weight: 400;
+      background-color: $white;
+      border: 1px solid $black;
+      border-radius: 4px;
+      cursor: pointer;
+      transition-property: color, background-color;
+      transition-duration: 0.3s;
+    }
+
+    .disconnectButton:hover {
+      color: $white;
+      background-color: $black;
+    }
+
+    /* MODAL */
+
+    .modalBackground {
+      display: none;
+      position: absolute;
+      z-index: 2;
+      width: 100vw;
+      height: 100vh;
+      background-color: $black;
+      opacity: 0.9;
+    }
+
+    .modalContainer {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      z-index: 3;
+      width: 100vw;
+      height: 100vh;
+
+      .updateModal {
+        display: none;
+        padding: 92px;
+        background-color: $white;
+        border-radius: 4px;
+
+        .modalTitle {
+          width: 256px;
+          font-weight: 400;
+          text-align: center;
+        }
+
+        form {
+          margin-top: 64px;
+
+          input {
+            width: 256px;
+            height: 40px;
+            padding-left: 16px;
+            color: $black;
+            background-color: $white;
+            border: 1px solid $black;
+            border-radius: 4px;
+          }
+
+          .dateUpdateInput {
+            font-family: $font;
+            font-weight: 100;
+            text-transform: uppercase;
+          }
+
+          input:focus {
+            background-color: $white;
+            outline: none;
+            border: 2px solid $black;
+          }
+        }
+      }
+
+      .deleteModal {
+        display: none;
+        padding: 92px;
+        background-color: $white;
+        border-radius: 4px;
+
+        .modalTitle {
+          width: 256px;
+          font-weight: 400;
+          text-align: center;
+        }
+      }
+
+      .confirmButton,
+      .cancelButton,
+      .yesButton,
+      .noButton {
+        margin-top: 64px;
+        width: 120px;
+        height: 40px;
+        font-family: $font;
+        font-weight: 400;
+        background-color: $white;
+        border: 1px solid $black;
+        border-radius: 4px;
+        cursor: pointer;
+        transition-property: color, background-color;
+        transition-duration: 0.3s;
+      }
+
+      .confirmButton,
+      .yesButton {
+        margin-right: 16px;
+        color: $white;
+        background-color: $black;
+      }
+
+      .confirmButton:hover,
+      .yesButton:hover {
+        color: $black;
+        background-color: $white;
+      }
+
+      .cancelButton:hover,
+      .noButton:hover {
+        color: $white;
+        background-color: $black;
+      }
+    }
+  }
+
+  /* FORM CONTAINER */
+
+  .formContainer {
+    position: fixed;
+    height: 100vh;
+    padding: 128px 92px 0 92px;
+    color: $white;
+    background-color: $black;
+
+    h1 {
+      margin-bottom: 64px;
+      font-size: 24px;
+      font-weight: 400;
+      text-align: center;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input {
+      width: 256px;
+      height: 40px;
+      padding-left: 16px;
+      color: $white;
+      background-color: $black;
+      border: 1px solid $white;
+      border-radius: 4px;
+    }
+
+    input:not(:nth-child(5)) {
+      margin-bottom: 32px;
+    }
+
+    input:focus {
+      background-color: $black;
+      outline: none;
+      border: 2px solid $white;
+    }
+
+    .dateInput {
+      font-family: $font;
+      font-weight: 100;
+      text-transform: uppercase;
+    }
+
+    .formButton {
+      width: 128px;
+      height: 40px;
+      margin-top: 64px;
+      font-family: $font;
+      font-weight: 400;
+      color: $white;
+      background-color: $green;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color, 0.3s;
+
+      &:hover {
+        background-color: #05b76d9d;
+      }
+    }
+
+    ::placeholder {
+      font-family: $font;
+      font-weight: 100;
+      color: $white;
+    }
+  }
+
+  /* LIST CONTAINER */
+
+  .listContainer {
+    position: absolute;
+    right: 0;
+    width: calc(100% - 440px);
+    padding-top: 128px;
+    color: $black;
+
+    h2 {
+      margin-bottom: 64px;
+      font-size: 24px;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .concertList {
+      > :not(:last-child) {
+        border-bottom: 1px solid #d9d9d9;
+      }
+
+      .concert {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 32px 0;
+        text-overflow: ellipsis;
+
+        .availableTickets {
+          color: $green;
+          text-decoration: none;
+
+          a {
+            margin-left: 8px;
+
+            .ticketsLinkButton {
+              width: 32px;
+              height: 16px;
+              font-family: $font;
+              font-size: 10px;
+              font-weight: 400;
+              color: $green;
+              background-color: $white;
+              border: 1px solid $green;
+              border-radius: 4px;
+              cursor: pointer;
+              transition-property: color, background-color;
+              transition-duration: 0.3s;
+            }
+
+            .ticketsLinkButton:hover {
+              color: $white;
+              background-color: $green;
+            }
+          }
+        }
+
+        .unavailableTickets {
+          color: $red;
+          text-decoration: none;
+        }
+
+        .editButtons {
+          display: flex;
+          flex-direction: column;
+
+          .updateButton {
+            width: 64px;
+            height: 16px;
+            margin-bottom: 8px;
+            font-family: $font;
+            font-size: 10px;
+            font-weight: 400;
+            color: $blue;
+            background-color: $white;
+            border: 1px solid $blue;
+            border-radius: 4px;
+            cursor: pointer;
+            transition-property: color, background-color;
+            transition-duration: 0.3s;
+          }
+
+          .updateButton:hover {
+            color: $white;
+            background-color: $blue;
+          }
+
+          .deleteButton {
+            width: 64px;
+            height: 16px;
+            font-family: $font;
+            font-size: 10px;
+            font-weight: 400;
+            color: $red;
+            background-color: $white;
+            border: 1px solid $red;
+            border-radius: 4px;
+            cursor: pointer;
+            transition-property: color, background-color;
+            transition-duration: 0.3s;
+          }
+
+          .deleteButton:hover {
+            color: $white;
+            background-color: $red;
+          }
+        }
+      }
+    }
+  }
+}
