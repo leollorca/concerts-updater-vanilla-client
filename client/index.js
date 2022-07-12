@@ -24,8 +24,6 @@ const UI = {
     updateModal: document.querySelector(".updateModal"),
     deleteModal: document.querySelector(".deleteModal"),
     modalTitle: document.querySelector(".modalTitle"),
-    confirmButton: document.querySelector(".confirmButton"),
-    cancelButton: document.querySelector(".cancelButton"),
     yesButton: document.querySelector(".yesButton"),
     noButton: document.querySelector(".noButton"),
   },
@@ -40,18 +38,28 @@ const columns = {
   col6: document.getElementsByClassName("col6"),
 };
 
+let state = [];
+
 function fetchData() {
   fetch("http://localhost:8070/concerts")
-    .then(function (res) {
+    .then((res) => {
       res
         .json()
-        .then(function (data) {
+        .then((data) => {
           state = data;
+          sortByDates(state);
           renderApp();
+          console.log(state);
         })
-        .catch(function (error) {});
+        .catch((error) => {});
     })
-    .catch(function (error) {});
+    .catch((error) => {});
+}
+
+function sortByDates(arr) {
+  arr.sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
 }
 
 fetchData();
@@ -70,9 +78,6 @@ function renderApp() {
   });
   alignList();
 }
-
-let state = [];
-let currentConcert = null;
 
 UI.formButton.addEventListener("click", submitConcert);
 
@@ -103,7 +108,7 @@ function submitConcert(e) {
 }
 
 Object.keys(UI.form).forEach((key) => {
-  UI.form[key].addEventListener("change", (e) => {
+  UI.form[key].addEventListener("change", () => {
     if (UI.form[key].value) {
       UI.form[key].style.border = "1px solid #50b76d";
     } else {
@@ -168,7 +173,6 @@ function addConcert(concert) {
   editButtons.appendChild(deleteButton);
   concertTag.appendChild(editButtons);
   updateButton.addEventListener("click", () => {
-    console.log(concert);
     buildUpdateModal(concert);
   });
   deleteButton.addEventListener("click", () => {
@@ -179,6 +183,14 @@ function addConcert(concert) {
 
 function buildUpdateModal(concert) {
   displayUpdateModal();
+  const confirmButton = document.createElement("button");
+  const cancelButton = document.createElement("button");
+  confirmButton.setAttribute("class", "confirmButton");
+  cancelButton.setAttribute("class", "cancelButton");
+  confirmButton.innerHTML = "Modifier";
+  cancelButton.innerHTML = "Annuler";
+  UI.modal.updateModal.appendChild(confirmButton);
+  UI.modal.updateModal.appendChild(cancelButton);
   UI.updateForm.dateUpdateInput.value = new Date(concert.date)
     .toISOString()
     .slice(0, 10);
@@ -190,29 +202,54 @@ function buildUpdateModal(concert) {
   } else {
     concert.ticketsLink = UI.updateForm.ticketsLinkUpdateInput.value;
   }
-  function onUpdateConcert(e) {
+  confirmButton.addEventListener("click", (e) => {
     e.preventDefault();
-    UI.modal.confirmButton.removeEventListener("click", onUpdateConcert, true);
-    updateConcert(concert);
-  }
-  UI.modal.confirmButton.addEventListener("click", onUpdateConcert, true);
-  UI.modal.cancelButton.addEventListener("click", hideModal);
+    updateConcert(concert, confirmButton, cancelButton);
+  });
+  cancelButton.addEventListener("click", () => {
+    hideModal();
+    confirmButton.remove();
+    cancelButton.remove();
+    resetUpdateForm(UI.updateForm);
+    fetchData();
+  });
 }
 
-function updateConcert(concert) {
+function updateConcert(concert, confirmButton, cancelButton) {
   concert.date = new Date(UI.updateForm.dateUpdateInput.value);
-  console.log(UI.updateForm.dateUpdateInput.value);
-  console.log(concert.date);
   concert.city = UI.updateForm.cityUpdateInput.value;
   concert.depNum = UI.updateForm.depNumUpdateInput.value;
   concert.place = UI.updateForm.placeUpdateInput.value;
   concert.ticketsLink = UI.updateForm.ticketsLinkUpdateInput.value;
+  Object.keys(UI.updateForm).forEach((key) => {
+    if (key != "ticketsLinkUpdateInput") {
+      if (!UI.updateForm[key].value) {
+        UI.updateForm[key].addEventListener("keydown", () => {
+          UI.updateForm[key].style.border = "1px solid #50b76d";
+        });
+      }
+    }
+  });
+  if (!dateChecker(UI.updateForm.dateUpdateInput.value)) {
+    UI.updateForm.dateUpdateInput.style.border = "1px solid #e56c6c";
+    UI.alertBox.innerHTML = "La date renseignée est expirée.";
+    displayErrorAlert();
+    return;
+  }
+  if (!formChecker(UI.updateForm)) {
+    UI.alertBox.innerHTML = "Formulaire incomplet.";
+    displayErrorAlert();
+    return;
+  }
   mongoUpdateConcert(concert)
     .then(() => {
       fetchData();
       UI.alertBox.innerHTML = "Date modifiée avec succès.";
       displaySuccessAlert();
       hideModal();
+      resetUpdateForm(UI.updateForm);
+      confirmButton.remove();
+      cancelButton.remove();
     })
     .catch((error) => {
       UI.alertBox.innerHTML = "Une erreur s'est produite.";
@@ -246,6 +283,12 @@ function resetForm(form) {
   Object.keys(form).forEach((key) => {
     form[key].value = null;
     form[key].style.border = "1px solid #f1f1f1";
+  });
+}
+
+function resetUpdateForm(form) {
+  Object.keys(form).forEach((key) => {
+    form[key].style.border = "1px solid #161616";
   });
 }
 
@@ -330,7 +373,6 @@ function mongoAddConcert(concert) {
 }
 
 function mongoUpdateConcert(concert) {
-  console.log("mongo", concert);
   return fetch(`http://localhost:8070/concerts/${concert._id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

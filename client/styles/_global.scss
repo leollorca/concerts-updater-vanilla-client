@@ -203,7 +203,7 @@ body {
       margin-bottom: 32px;
     }
 
-    &:focus {
+    input:focus {
       background-color: $black;
       outline: none;
       border: 2px solid $white;
@@ -263,9 +263,9 @@ body {
 
       .concert {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
-        padding: 32px 92px;
+        padding: 32px 0;
         text-overflow: ellipsis;
 
         .availableTickets {
