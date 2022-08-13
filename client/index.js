@@ -46,20 +46,37 @@ function fetchData() {
       res
         .json()
         .then((data) => {
-          state = data;
-          sortByDates(state);
-          renderApp();
+          state = formatState(data);
           console.log(state);
+          renderApp();
         })
         .catch((error) => {});
     })
     .catch((error) => {});
 }
 
-function sortByDates(arr) {
-  arr.sort((a, b) => {
-    return new Date(a.date) - new Date(b.date);
-  });
+function formatState(data) {
+  return data
+    .reduce((acc, value) => {
+      const date = new Date(value.date);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const sameDate = acc.findIndex((date) => {
+        return date.year === year && date.month === month;
+      });
+      if (sameDate === -1) {
+        acc.push({ year, month, concerts: [value] });
+      } else {
+        acc[sameDate].concerts.push(value);
+        acc[sameDate].concerts.sort((a, b) => {
+          return new Date(a.date) - new Date(b.date);
+        });
+      }
+      return acc;
+    }, [])
+    .sort((a, b) => {
+      return new Date(a.year, a.month) - new Date(b.year, b.month);
+    });
 }
 
 fetchData();
@@ -68,13 +85,10 @@ function renderApp() {
   const listContainer = document.querySelector(".listContainer");
   listContainer.innerHTML = null;
   const concertListTitle = document.createElement("h2");
-  const concertList = document.createElement("ul");
   concertListTitle.innerHTML = "Dates affichées sur le site";
-  concertList.setAttribute("class", "concertList");
   listContainer.appendChild(concertListTitle);
-  listContainer.appendChild(concertList);
-  state.forEach((concert) => {
-    concertList.appendChild(addConcert(concert));
+  state.forEach((date) => {
+    listContainer.appendChild(addConcertsOfMonth(date));
   });
   alignList();
 }
@@ -131,6 +145,24 @@ function createConcert() {
     ticketsLink: ticketsLinkInputValue,
   };
   return concert;
+}
+
+function addConcertsOfMonth(date) {
+  const concertsOfMonth = document.createElement("div");
+  const concertsOfMonthTitle = document.createElement("h3");
+  concertsOfMonthTitle.setAttribute("class", "concertsOfMonthTitle");
+  const month = new Date(date.year, date.month).toLocaleString("default", {
+    month: "long",
+  });
+  concertsOfMonthTitle.innerHTML = `${month} ${date.year}`;
+  concertsOfMonth.appendChild(concertsOfMonthTitle);
+  const concertList = document.createElement("ul");
+  concertList.setAttribute("class", "concertList");
+  date.concerts.forEach((concert) => {
+    concertList.appendChild(addConcert(concert));
+  });
+  concertsOfMonth.appendChild(concertList);
+  return concertsOfMonth;
 }
 
 function addConcert(concert) {
@@ -259,16 +291,30 @@ function updateConcert(concert, confirmButton, cancelButton) {
 
 function buildDeleteModal(concert) {
   displayDeleteModal();
-  UI.modal.yesButton.addEventListener("click", () => {
-    deleteConcert(concert);
+  const yesButton = document.createElement("button");
+  const noButton = document.createElement("button");
+  yesButton.setAttribute("class", "yesButton");
+  noButton.setAttribute("class", "noButton");
+  yesButton.innerHTML = "Oui";
+  noButton.innerHTML = "Non";
+  UI.modal.deleteModal.appendChild(yesButton);
+  UI.modal.deleteModal.appendChild(noButton);
+  yesButton.addEventListener("click", () => {
+    deleteConcert(concert, yesButton, noButton);
   });
-  UI.modal.noButton.addEventListener("click", hideModal);
+  noButton.addEventListener("click", () => {
+    hideModal();
+    yesButton.remove();
+    noButton.remove();
+  });
 }
 
-function deleteConcert(concert) {
+function deleteConcert(concert, yesButton, noButton) {
   mongoDeleteConcert(concert)
     .then(() => {
       hideModal();
+      yesButton.remove();
+      noButton.remove();
       UI.alertBox.innerHTML = "Date supprimée avec succès.";
       displaySuccessAlert();
       fetchData();
