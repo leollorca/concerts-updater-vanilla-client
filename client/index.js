@@ -85,7 +85,7 @@ function renderApp() {
   const listContainer = document.querySelector(".listContainer");
   listContainer.innerHTML = null;
   const concertListTitle = document.createElement("h2");
-  concertListTitle.innerHTML = "Dates affichées sur le site";
+  concertListTitle.innerHTML = "Concerts affichés sur le site";
   listContainer.appendChild(concertListTitle);
   state.forEach((date) => {
     listContainer.appendChild(addConcertsOfMonth(date));

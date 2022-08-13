@@ -11,7 +11,7 @@
       <div class="alertBox"></div>
       <button class="disconnectButton">Se déconnecter</button>
       <div class="formContainer">
-        <h1 class="test">Ajouter une date</h1>
+        <h1 class="test">Ajouter un concert</h1>
         <form>
           <input type="date" autocomplete="off" required class="dateInput" />
           <input
@@ -41,48 +41,58 @@
             placeholder="Lien billetterie"
             class="ticketsLinkInput"
           />
-          <button class="formButton">Ajouter la date</button>
+          <button class="formButton">Ajouter</button>
         </form>
       </div>
       <div class="listContainer"></div>
       <div class="modalBackground"></div>
       <div class="modalContainer">
         <div class="updateModal">
-          <h3 class="modalTitle">Modifier la date.</h3>
+          <h3 class="modalTitle">Modifier le concert.</h3>
           <form>
+            <label for="date">Date</label>
             <input
               type="date"
               autocomplete="off"
               required
+              id="date"
               class="dateUpdateInput"
             />
+            <label for="city">Ville</label>
             <input
               type="text"
               autocomplete="off"
               required
+              id="city"
               class="cityUpdateInput"
             />
+            <label for="depNum">N° Département</label>
             <input
               type="text"
               autocomplete="off"
               required
+              id="depNum"
               class="depNumUpdateInput"
             />
+            <label for="place">Lieu</label>
             <input
               type="text"
               autocomplete="off"
               required
+              id="place"
               class="placeUpdateInput"
             />
+            <label for="ticketsLink">Lien billetterie</label>
             <input
               type="text"
               autocomplete="off"
+              id="ticketsLink"
               class="ticketsLinkUpdateInput"
             />
           </form>
         </div>
         <div class="deleteModal">
-          <h3 class="modalTitle">Supprimer la date.</h3>
+          <h3 class="modalTitle">Supprimer le concert.</h3>
         </div>
       </div>
     </div>

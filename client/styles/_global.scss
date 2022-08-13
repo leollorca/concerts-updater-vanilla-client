@@ -60,7 +60,7 @@ body {
 
     .modalBackground {
       display: none;
-      position: absolute;
+      position: fixed;
       z-index: 2;
       width: 100vw;
       height: 100vh;
@@ -69,6 +69,7 @@ body {
     }
 
     .modalContainer {
+      top: 0;
       display: none;
       justify-content: center;
       align-items: center;
@@ -79,7 +80,8 @@ body {
 
       .updateModal {
         display: none;
-        padding: 92px;
+        position: fixed;
+        padding: 64px;
         background-color: $white;
         border-radius: 4px;
 
@@ -90,9 +92,11 @@ body {
         }
 
         form {
-          margin-top: 64px;
+          align-items: start;
+          margin-top: 32px;
 
           input {
+            display: inline;
             width: 256px;
             height: 40px;
             padding-left: 16px;
@@ -100,6 +104,10 @@ body {
             background-color: $white;
             border: 1px solid $black;
             border-radius: 4px;
+          }
+
+          label {
+            margin-bottom: 16px;
           }
 
           .dateUpdateInput {
@@ -118,7 +126,8 @@ body {
 
       .deleteModal {
         display: none;
-        padding: 92px;
+        position: fixed;
+        padding: 64px;
         background-color: $white;
         border-radius: 4px;
 
@@ -133,7 +142,7 @@ body {
       .cancelButton,
       .yesButton,
       .noButton {
-        margin-top: 64px;
+        margin-top: 32px;
         width: 120px;
         height: 40px;
         font-family: $font;
