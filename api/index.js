@@ -32,6 +32,7 @@ server.get("/", (request, reply) => {
 
 server.post("/concerts", (request, reply) => {
   const concert = request.body;
+  concert.date = new Date(concert.date);
   db.concerts
     .insert(concert)
     .then(() => {
@@ -44,8 +45,10 @@ server.post("/concerts", (request, reply) => {
 });
 
 server.get("/concerts", (request, reply) => {
+  const limitDate = new Date();
+  limitDate.setUTCHours(0, 0, 0, 0);
   db.concerts
-    .find()
+    .find({ date: { $gte: limitDate } })
     .then((res) => {
       reply.send(res);
     })
@@ -62,7 +65,7 @@ server.put("/concerts/:id", (request, reply) => {
       { _id: mongoist.ObjectId(concertId) },
       {
         $set: {
-          date: concert.date,
+          date: new Date(concert.date),
           city: concert.city,
           depNum: concert.depNum,
           place: concert.place,
