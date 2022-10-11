@@ -1,1 +1,1 @@
-# concerts-updater
+# vanilla-client-concerts-updater
