@@ -1,8 +1,9 @@
-import "./styles/style.scss";
+// import "./styles/style.scss";
 
 const UI = {
   app: document.querySelector(".app"),
   alertBox: document.querySelector(".alertBox"),
+  disconnectButton: document.querySelector(".disconnectButton"),
   formButton: document.querySelector(".formButton"),
   form: {
     dateInput: document.querySelector(".dateInput"),
@@ -40,6 +41,21 @@ const columns = {
 
 let state = [];
 
+async function start() {
+  await verifySession();
+  fetchData();
+}
+
+async function verifySession() {
+  const { status } = await fetch("http://localhost:8070/verify-session", {
+    credentials: "include",
+  });
+  console.log(status);
+  if (status === 401) {
+    document.location.href = "/login";
+  }
+}
+
 function fetchData() {
   fetch("http://localhost:8070/concerts")
     .then((res) => {
@@ -47,13 +63,20 @@ function fetchData() {
         .json()
         .then((data) => {
           state = formatState(data);
-          console.log(state);
           renderApp();
         })
         .catch((error) => {});
     })
     .catch((error) => {});
 }
+
+UI.disconnectButton.addEventListener("click", async (e) => {
+  e.preventDefault();
+  await fetch("http://localhost:8070/logout", {
+    credentials: "include",
+  });
+  document.location.href = "/login";
+});
 
 function formatState(data) {
   return data
@@ -79,7 +102,7 @@ function formatState(data) {
     });
 }
 
-fetchData();
+start();
 
 function renderApp() {
   const listContainer = document.querySelector(".listContainer");
@@ -415,6 +438,7 @@ function mongoAddConcert(concert) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(concert),
+    credentials: "include",
   });
 }
 
@@ -423,6 +447,7 @@ function mongoUpdateConcert(concert) {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(concert),
+    credentials: "include",
   });
 }
 
@@ -430,5 +455,6 @@ function mongoDeleteConcert(concert) {
   return fetch(`http://localhost:8070/concerts/${concert._id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
   });
 }
