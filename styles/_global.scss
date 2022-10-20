@@ -9,6 +9,59 @@ body {
   font-weight: 100;
   background-color: $white;
 
+  /* LOG IN FORM */
+
+  #loginForm {
+    position: absolute;
+    top: calc(50% - 184px);
+    left: calc(50% - 128px);
+    display: flex;
+    flex-direction: column;
+
+    input {
+      width: 256px;
+      height: 40px;
+      margin-bottom: 32px;
+      padding-left: 16px;
+      font-family: $font;
+      font-weight: 100;
+      color: #161616;
+      border: 1px solid #161616;
+      border-radius: 4px;
+      background-color: #f1f1f1;
+
+      &:focus {
+        outline: none;
+        border: 2px solid #161616;
+      }
+    }
+
+    button {
+      width: 256px;
+      height: 40px;
+      font-family: $font;
+      font-weight: 700;
+      color: #f1f1f1;
+      border: 1px solid #161616;
+      border-radius: 4px;
+      background-color: #161616;
+      cursor: pointer;
+      transition-property: color, background-color;
+      transition-duration: 0.3s;
+
+      &:hover {
+        color: #161616;
+        background-color: #f1f1f1;
+      }
+    }
+
+    ::placeholder {
+      font-family: $font;
+      font-weight: 100;
+      color: $black;
+    }
+  }
+
   .app {
     display: flex;
     flex-direction: row;
@@ -255,7 +308,7 @@ body {
     position: absolute;
     right: 0;
     width: calc(100% - 440px);
-    padding: 128px 92px 64px 92px;
+    padding: 128px 0 64px 0;
     color: $black;
 
     h2 {
@@ -266,7 +319,7 @@ body {
     }
 
     h3 {
-      margin: 64px 0 16px 0;
+      margin: 64px 0 16px 92px;
       font-size: 20px;
       text-transform: capitalize;
     }
@@ -280,7 +333,7 @@ body {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 32px 0;
+        padding: 32px 92px;
         text-overflow: ellipsis;
 
         .availableTickets {
