@@ -4,11 +4,11 @@ const UI = {
   loginButton: document.getElementById("loginButton"),
 };
 
-UI.loginButton.addEventListener("click", async (e) => {
-  e.preventDefault();
+UI.loginButton.addEventListener("click", async (event) => {
+  event.preventDefault();
   const emailInputValue = UI.emailInput.value;
   const passwordInputValue = UI.passwordInput.value;
-  const { status } = await login(emailInputValue, passwordInputValue);
+  const { status } = await logIn(emailInputValue, passwordInputValue);
   if (status === 400) {
     // erreur de saisie des ids
     return;
@@ -16,7 +16,7 @@ UI.loginButton.addEventListener("click", async (e) => {
   document.location.href = "/";
 });
 
-function login(email, password) {
+function logIn(email, password) {
   return fetch(`http://localhost:8070/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
