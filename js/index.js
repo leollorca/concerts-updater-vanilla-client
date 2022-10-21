@@ -1,82 +1,32 @@
-// import "./styles/style.scss";
-
-const UI = {
-  app: document.querySelector(".app"),
-  alertBox: document.querySelector(".alertBox"),
-  disconnectButton: document.querySelector(".disconnectButton"),
-  formButton: document.querySelector(".formButton"),
-  form: {
-    dateInput: document.querySelector(".dateInput"),
-    cityInput: document.querySelector(".cityInput"),
-    depNumInput: document.querySelector(".depNumInput"),
-    placeInput: document.querySelector(".placeInput"),
-    ticketsLinkInput: document.querySelector(".ticketsLinkInput"),
-  },
-  updateForm: {
-    dateUpdateInput: document.querySelector(".dateUpdateInput"),
-    cityUpdateInput: document.querySelector(".cityUpdateInput"),
-    depNumUpdateInput: document.querySelector(".depNumUpdateInput"),
-    placeUpdateInput: document.querySelector(".placeUpdateInput"),
-    ticketsLinkUpdateInput: document.querySelector(".ticketsLinkUpdateInput"),
-  },
-  modal: {
-    modalBackground: document.querySelector(".modalBackground"),
-    modalContainer: document.querySelector(".modalContainer"),
-    updateModal: document.querySelector(".updateModal"),
-    deleteModal: document.querySelector(".deleteModal"),
-    modalTitle: document.querySelector(".modalTitle"),
-    yesButton: document.querySelector(".yesButton"),
-    noButton: document.querySelector(".noButton"),
-  },
-};
-
-const columns = {
-  col1: document.getElementsByClassName("col1"),
-  col2: document.getElementsByClassName("col2"),
-  col3: document.getElementsByClassName("col3"),
-  col4: document.getElementsByClassName("col4"),
-  col5: document.getElementsByClassName("col5"),
-  col6: document.getElementsByClassName("col6"),
-};
+import { UI, columns } from "./interface";
+import { mongoAddConcert, mongoUpdateConcert, mongoDeleteConcert } from "./api";
+import { resetForm, resetUpdateForm, formChecker, dateChecker } from "./form";
+import { displayUpdateModal, displayDeleteModal, hideModal } from "./modal";
+import { displaySuccessAlert, displayErrorAlert } from "./alert";
 
 let state = [];
 
-async function start() {
+(async function () {
   await verifySession();
   fetchData();
-}
+  attachEventListeners();
+})();
 
 async function verifySession() {
   const { status } = await fetch("http://localhost:8070/verify-session", {
     credentials: "include",
   });
-  console.log(status);
   if (status === 401) {
     document.location.href = "/login";
   }
 }
 
-function fetchData() {
-  fetch("http://localhost:8070/concerts")
-    .then((res) => {
-      res
-        .json()
-        .then((data) => {
-          state = formatState(data);
-          renderApp();
-        })
-        .catch((error) => {});
-    })
-    .catch((error) => {});
+async function fetchData() {
+  const response = await fetch("http://localhost:8070/concerts");
+  const data = await response.json();
+  state = formatState(data);
+  renderApp();
 }
-
-UI.disconnectButton.addEventListener("click", async (e) => {
-  e.preventDefault();
-  await fetch("http://localhost:8070/logout", {
-    credentials: "include",
-  });
-  document.location.href = "/login";
-});
 
 function formatState(data) {
   return data
@@ -102,7 +52,27 @@ function formatState(data) {
     });
 }
 
-start();
+function attachEventListeners() {
+  UI.disconnectButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    await fetch("http://localhost:8070/logout", {
+      credentials: "include",
+    });
+    document.location.href = "/login";
+  });
+
+  Object.keys(UI.form).forEach((key) => {
+    UI.form[key].addEventListener("change", () => {
+      if (UI.form[key].value) {
+        UI.form[key].style.border = "1px solid #50b76d";
+      } else {
+        UI.form[key].style.border = "1px solid #f1f1f1";
+      }
+    });
+  });
+
+  UI.formButton.addEventListener("click", submitConcert);
+}
 
 function renderApp() {
   const listContainer = document.querySelector(".listContainer");
@@ -115,8 +85,6 @@ function renderApp() {
   });
   alignList();
 }
-
-UI.formButton.addEventListener("click", submitConcert);
 
 function submitConcert(e) {
   e.preventDefault();
@@ -143,16 +111,6 @@ function submitConcert(e) {
       displayErrorAlert();
     });
 }
-
-Object.keys(UI.form).forEach((key) => {
-  UI.form[key].addEventListener("change", () => {
-    if (UI.form[key].value) {
-      UI.form[key].style.border = "1px solid #50b76d";
-    } else {
-      UI.form[key].style.border = "1px solid #f1f1f1";
-    }
-  });
-});
 
 function createConcert() {
   const dateInputValue = new Date(UI.form.dateInput.value);
@@ -342,44 +300,10 @@ function deleteConcert(concert, yesButton, noButton) {
       displaySuccessAlert();
       fetchData();
     })
-    .catch((err) => {
+    .catch((error) => {
       UI.alertBox.innerHTML = "Une erreur s'est produite.";
       displayErrorAlert();
     });
-}
-
-function resetForm(form) {
-  Object.keys(form).forEach((key) => {
-    form[key].value = null;
-    form[key].style.border = "1px solid #f1f1f1";
-  });
-}
-
-function resetUpdateForm(form) {
-  Object.keys(form).forEach((key) => {
-    form[key].style.border = "1px solid #161616";
-  });
-}
-
-function formChecker(form) {
-  let valid = true;
-  Object.keys(form).forEach((key) => {
-    if (form[key].required && !form[key].value) {
-      form[key].style.border = "1px solid #e56c6c";
-      valid = false;
-    }
-  });
-  return valid;
-}
-
-function dateChecker(date) {
-  let valid = true;
-  const today = new Date().getTime();
-  const concertDate = new Date(date).getTime();
-  if (concertDate < today) {
-    valid = false;
-  }
-  return valid;
 }
 
 function alignList() {
@@ -393,68 +317,5 @@ function alignList() {
     columnsElements.forEach((element) => {
       element.style.width = `${largestColumnElement}px`;
     });
-  });
-}
-
-function displayUpdateModal() {
-  UI.modal.modalBackground.style.display = "block";
-  UI.modal.modalContainer.style.display = "flex";
-  UI.modal.updateModal.style.display = "block";
-}
-
-function displayDeleteModal() {
-  UI.modal.modalBackground.style.display = "block";
-  UI.modal.modalContainer.style.display = "flex";
-  UI.modal.deleteModal.style.display = "block";
-}
-
-function hideModal() {
-  UI.modal.modalBackground.style.display = "none";
-  UI.modal.modalContainer.style.display = "none";
-  UI.modal.updateModal.style.display = "none";
-  UI.modal.deleteModal.style.display = "none";
-}
-
-function displaySuccessAlert() {
-  UI.alertBox.setAttribute("class", "alertBox successAlert");
-  UI.alertBox.style.top = "0";
-  setTimeout(removeAlert, 6000);
-}
-
-function displayErrorAlert() {
-  UI.alertBox.setAttribute("class", "alertBox errorAlert");
-  UI.alertBox.style.top = "0";
-  setTimeout(removeAlert, 6000);
-}
-
-function removeAlert() {
-  UI.alertBox.style.top = "-64px";
-  UI.alertBox.innerHTML = null;
-  UI.alertBox.setAttribute("class", "alertBox");
-}
-
-function mongoAddConcert(concert) {
-  return fetch(`http://localhost:8070/concerts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(concert),
-    credentials: "include",
-  });
-}
-
-function mongoUpdateConcert(concert) {
-  return fetch(`http://localhost:8070/concerts/${concert._id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(concert),
-    credentials: "include",
-  });
-}
-
-function mongoDeleteConcert(concert) {
-  return fetch(`http://localhost:8070/concerts/${concert._id}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
   });
 }
