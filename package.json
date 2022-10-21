@@ -5,8 +5,8 @@
     "login/index.html"
   ],
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build"
+    "start": "NODE_ENV=dev parcel",
+    "build": "NODE_ENV=dev parcel build"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.7.0",

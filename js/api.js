@@ -1,25 +1,44 @@
-export function mongoAddConcert(concert) {
-  return fetch(`http://localhost:8070/concerts`, {
+import request from "./services/request";
+
+export function getConcertsRequest() {
+  return request("/concerts");
+}
+
+export function addConcertRequest(concert) {
+  return request("/concerts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(concert),
-    credentials: "include",
   });
 }
 
-export function mongoUpdateConcert(concert) {
-  return fetch(`http://localhost:8070/concerts/${concert._id}`, {
+export function updateConcertRequest(concert) {
+  return request(`/concerts/${concert._id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(concert),
-    credentials: "include",
   });
 }
 
-export function mongoDeleteConcert(concert) {
-  return fetch(`http://localhost:8070/concerts/${concert._id}`, {
+export function deleteConcertRequest(concert) {
+  return request(`/concerts/${concert._id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
   });
+}
+
+export function logInRequest(email, password) {
+  return request("/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+}
+
+export function verifySessionRequest() {
+  return request("/verify-session");
+}
+
+export function logOutRequest() {
+  return request("/logout");
 }

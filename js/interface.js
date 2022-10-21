@@ -26,13 +26,12 @@ export const UI = {
     yesButton: document.querySelector(".yesButton"),
     noButton: document.querySelector(".noButton"),
   },
-};
-
-export const columns = {
-  col1: document.getElementsByClassName("col1"),
-  col2: document.getElementsByClassName("col2"),
-  col3: document.getElementsByClassName("col3"),
-  col4: document.getElementsByClassName("col4"),
-  col5: document.getElementsByClassName("col5"),
-  col6: document.getElementsByClassName("col6"),
+  columns: {
+    col1: document.getElementsByClassName("col1"),
+    col2: document.getElementsByClassName("col2"),
+    col3: document.getElementsByClassName("col3"),
+    col4: document.getElementsByClassName("col4"),
+    col5: document.getElementsByClassName("col5"),
+    col6: document.getElementsByClassName("col6"),
+  },
 };
