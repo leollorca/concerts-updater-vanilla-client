@@ -1,5 +1,13 @@
-import { UI, columns } from "./interface";
-import { mongoAddConcert, mongoUpdateConcert, mongoDeleteConcert } from "./api";
+import {
+  getConcertsRequest,
+  addConcertRequest,
+  updateConcertRequest,
+  deleteConcertRequest,
+  verifySessionRequest,
+  logOutRequest,
+  getConcertsRequest,
+} from "./api";
+import { UI } from "./interface";
 import { resetForm, resetUpdateForm, formChecker, dateChecker } from "./form";
 import { displayUpdateModal, displayDeleteModal, hideModal } from "./modal";
 import { displaySuccessAlert, displayErrorAlert } from "./alert";
@@ -13,19 +21,27 @@ let state = [];
 })();
 
 async function verifySession() {
-  const { status } = await fetch("http://localhost:8070/verify-session", {
-    credentials: "include",
-  });
-  if (status === 401) {
+  try {
+    const { status } = await verifySessionRequest();
+    if (status === 401) {
+      document.location.href = "/login";
+    }
+  } catch (error) {
     document.location.href = "/login";
   }
 }
 
 async function fetchData() {
-  const response = await fetch("http://localhost:8070/concerts");
-  const data = await response.json();
-  state = formatState(data);
-  renderApp();
+  try {
+    const response = await getConcertsRequest();
+    const data = await response.json();
+    state = formatState(data);
+    renderApp();
+  } catch (error) {
+    UI.alertBox.innerHTML =
+      "Une erreur s'est produite lors de la récupération des données.";
+    displayErrorAlert();
+  }
 }
 
 function formatState(data) {
@@ -55,9 +71,7 @@ function formatState(data) {
 function attachEventListeners() {
   UI.disconnectButton.addEventListener("click", async (event) => {
     event.preventDefault();
-    await fetch("http://localhost:8070/logout", {
-      credentials: "include",
-    });
+    await logOutRequest();
     document.location.href = "/login";
   });
 
@@ -86,8 +100,8 @@ function renderApp() {
   alignList();
 }
 
-function submitConcert(e) {
-  e.preventDefault();
+async function submitConcert(event) {
+  event.preventDefault();
   if (!dateChecker(UI.form.dateInput.value)) {
     UI.form.dateInput.style.border = "1px solid #e56c6c";
     UI.alertBox.innerHTML = "La date renseignée est expirée.";
@@ -99,17 +113,18 @@ function submitConcert(e) {
     displayErrorAlert();
     return;
   }
-  mongoAddConcert(createConcert())
-    .then(() => {
-      fetchData();
-      UI.alertBox.innerHTML = "Date ajoutée avec succès.";
-      displaySuccessAlert();
-      resetForm(UI.form);
-    })
-    .catch((error) => {
-      UI.alertBox.innerHTML = "Une erreur s'est produite.";
-      displayErrorAlert();
-    });
+
+  try {
+    await addConcertRequest(createConcert());
+    fetchData();
+    UI.alertBox.innerHTML = "Concert ajouté avec succès.";
+    displaySuccessAlert();
+    resetForm(UI.form);
+  } catch (error) {
+    UI.alertBox.innerHTML =
+      "Une erreur s'est produite lors de la création du concert.";
+    displayErrorAlert();
+  }
 }
 
 function createConcert() {
@@ -215,8 +230,8 @@ function buildUpdateModal(concert) {
   } else {
     concert.ticketsLink = UI.updateForm.ticketsLinkUpdateInput.value;
   }
-  confirmButton.addEventListener("click", (e) => {
-    e.preventDefault();
+  confirmButton.addEventListener("click", (event) => {
+    event.preventDefault();
     updateConcert(concert, confirmButton, cancelButton);
   });
   cancelButton.addEventListener("click", () => {
@@ -228,7 +243,7 @@ function buildUpdateModal(concert) {
   });
 }
 
-function updateConcert(concert, confirmButton, cancelButton) {
+async function updateConcert(concert, confirmButton, cancelButton) {
   concert.date = new Date(UI.updateForm.dateUpdateInput.value);
   concert.city = UI.updateForm.cityUpdateInput.value;
   concert.depNum = UI.updateForm.depNumUpdateInput.value;
@@ -254,20 +269,21 @@ function updateConcert(concert, confirmButton, cancelButton) {
     displayErrorAlert();
     return;
   }
-  mongoUpdateConcert(concert)
-    .then(() => {
-      fetchData();
-      UI.alertBox.innerHTML = "Date modifiée avec succès.";
-      displaySuccessAlert();
-      hideModal();
-      resetUpdateForm(UI.updateForm);
-      confirmButton.remove();
-      cancelButton.remove();
-    })
-    .catch((error) => {
-      UI.alertBox.innerHTML = "Une erreur s'est produite.";
-      displayErrorAlert();
-    });
+
+  try {
+    await updateConcertRequest(concert);
+    fetchData();
+    UI.alertBox.innerHTML = "Concert modifié avec succès.";
+    displaySuccessAlert();
+    hideModal();
+    resetUpdateForm(UI.updateForm);
+    confirmButton.remove();
+    cancelButton.remove();
+  } catch (error) {
+    UI.alertBox.innerHTML =
+      "Une erreur s'est produite lors de la modification du concert.";
+    displayErrorAlert();
+  }
 }
 
 function buildDeleteModal(concert) {
@@ -290,25 +306,25 @@ function buildDeleteModal(concert) {
   });
 }
 
-function deleteConcert(concert, yesButton, noButton) {
-  mongoDeleteConcert(concert)
-    .then(() => {
-      hideModal();
-      yesButton.remove();
-      noButton.remove();
-      UI.alertBox.innerHTML = "Date supprimée avec succès.";
-      displaySuccessAlert();
-      fetchData();
-    })
-    .catch((error) => {
-      UI.alertBox.innerHTML = "Une erreur s'est produite.";
-      displayErrorAlert();
-    });
+async function deleteConcert(concert, yesButton, noButton) {
+  try {
+    await deleteConcertRequest(concert);
+    hideModal();
+    yesButton.remove();
+    noButton.remove();
+    UI.alertBox.innerHTML = "Concert supprimé avec succès.";
+    displaySuccessAlert();
+    fetchData();
+  } catch (error) {
+    UI.alertBox.innerHTML =
+      "Une erreur s'est produite lors de la supression du concert.";
+    displayErrorAlert();
+  }
 }
 
 function alignList() {
-  Object.keys(columns).forEach((key) => {
-    const columnsElements = Array.from(columns[key]);
+  Object.keys(UI.columns).forEach((key) => {
+    const columnsElements = Array.from(UI.columns[key]);
     const widthColumnsElements = [];
     columnsElements.forEach((element) => {
       widthColumnsElements.push(element.getBoundingClientRect().width);
