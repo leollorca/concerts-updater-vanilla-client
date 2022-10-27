@@ -225,11 +225,7 @@ function buildUpdateModal(concert) {
   UI.updateForm.cityUpdateInput.value = concert.city;
   UI.updateForm.depNumUpdateInput.value = concert.depNum;
   UI.updateForm.placeUpdateInput.value = concert.place;
-  if (!UI.updateForm.ticketsLinkUpdateInput.value) {
-    concert.ticketsLink = null;
-  } else {
-    concert.ticketsLink = UI.updateForm.ticketsLinkUpdateInput.value;
-  }
+  UI.updateForm.ticketsLinkUpdateInput.value = concert.ticketsLink;
   confirmButton.addEventListener("click", (event) => {
     event.preventDefault();
     updateConcert(concert, confirmButton, cancelButton);
