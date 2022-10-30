@@ -23,7 +23,6 @@ export function updateConcertRequest(concert) {
 export function deleteConcertRequest(concert) {
   return request(`/concerts/${concert._id}`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
   });
 }
 
